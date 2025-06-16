@@ -1,0 +1,15 @@
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.AssemblyInfoInputs.cache
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.AssemblyInfo.cs
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.csproj.CoreCompileInputs.cache
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.csproj.AssemblyReference.cache
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\bin\Debug\net9.0\Bootcamp.Core.deps.json
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\bin\Debug\net9.0\Bootcamp.Core.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\bin\Debug\net9.0\Bootcamp.Core.pdb
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\bin\Debug\net9.0\Bootcamp.Entities.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\bin\Debug\net9.0\Bootcamp.Entities.pdb
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.E7C031D4.Up2Date
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\refint\Bootcamp.Core.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\Bootcamp.Core.pdb
+C:\Users\batuhan\Desktop\Project\Bootcamp.Core\obj\Debug\net9.0\ref\Bootcamp.Core.dll

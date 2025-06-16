@@ -1,0 +1,11 @@
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\bin\Debug\net9.0\Bootcamp.Entities.deps.json
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\bin\Debug\net9.0\Bootcamp.Entities.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\bin\Debug\net9.0\Bootcamp.Entities.pdb
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.AssemblyInfoInputs.cache
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.AssemblyInfo.cs
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.csproj.CoreCompileInputs.cache
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\refint\Bootcamp.Entities.dll
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\Bootcamp.Entities.pdb
+C:\Users\batuhan\Desktop\Project\Bootcamp.Entities\obj\Debug\net9.0\ref\Bootcamp.Entities.dll
