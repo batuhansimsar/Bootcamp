@@ -188,24 +188,5 @@ GET /api/Applications
 - Bootcamp başlangıç tarihi, bitiş tarihinden önce olmalıdır
 - Bootcamp'in durumu "başvuruya açık" olmadığında başvuru yapılamaz
 
-## 🤝 Katkıda Bulunma
-
-Katkılarınızı memnuniyetle karşılıyoruz! Lütfen şu adımları izleyin:
-
-1. Repo'yu forklayın
-2. Feature branch'i oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add some amazing feature'`)
-4. Branch'inize push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakın.
-
-## 📞 İletişim
-
-Sorularınız veya geri bildirimleriniz için lütfen [issues](https://github.com/kullaniciadi/bootcamp-management/issues) bölümünü kullanın veya e-posta gönderin: ornek@email.com
-
----
 
 ⭐️ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın! ⭐️ 
