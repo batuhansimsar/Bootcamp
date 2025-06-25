@@ -78,7 +78,7 @@ Proje, temiz mimari prensiplerini takip eden katmanlı bir yapıya sahiptir:
 
 2. Proje dizinine gidin:
    ```
-   cd bootcamp-management
+   cd Bootcamp
    ```
 
 3. Bağımlılıkları yükleyin:
