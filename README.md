@@ -73,7 +73,7 @@ Proje, temiz mimari prensiplerini takip eden katmanlı bir yapıya sahiptir:
 
 1. Repo'yu klonlayın:
    ```
-   git clone https://github.com/kullaniciadi/bootcamp-management.git
+   git clone https://github.com/batuhansimsar/Bootcamp.git
    ```
 
 2. Proje dizinine gidin:
