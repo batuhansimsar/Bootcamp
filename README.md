@@ -71,33 +71,35 @@ Proje, temiz mimari prensiplerini takip eden katmanlı bir yapıya sahiptir:
 
 ### Kurulum
 
-1. Repo'yu klonlayın:
+1. İlk önce gerekli ayaları yapın, program.cs dosyasındaki sqlserver bağlantısındaki bilgileri kendi bilgisayarınıza göre ayarlayın ve appsetings dosyasındaki ayarları da, ikisi de WebAPI klasöründe bulunuyor
+
+2. Repo'yu klonlayın:
    ```
    git clone https://github.com/batuhansimsar/Bootcamp.git
    ```
 
-2. Proje dizinine gidin:
+3. Proje dizinine gidin:
    ```
    cd Bootcamp
    ```
 
-3. Bağımlılıkları yükleyin:
+4. Bağımlılıkları yükleyin:
    ```
    dotnet restore
    ```
 
-4. Veritabanını oluşturun:
+5. Veritabanını oluşturun:
    ```
    dotnet ef database update --project Bootcamp.Repositories --startup-project Bootcamp.WebAPI
    ```
 
-5. Uygulamayı çalıştırın:
+6. Uygulamayı çalıştırın:
    ```
    cd Bootcamp.WebAPI
    dotnet run
    ```
 
-6. Tarayıcınızda Swagger UI'a erişin:
+7. Tarayıcınızda Swagger UI'a erişin:
    ```
    http://localhost:5158/swagger
    ```
