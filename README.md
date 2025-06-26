@@ -71,12 +71,12 @@ Proje, temiz mimari prensiplerini takip eden katmanlı bir yapıya sahiptir:
 
 ### Kurulum
 
-1. Öncelikle gerekli ayarları yapın. WebAPI klasöründe bulunan Program.cs dosyasındaki SQL Server bağlantı bilgilerini kendi bilgisayarınıza göre düzenleyin. Ayrıca appsettings.json dosyasındaki ayarları da buna uygun şekilde güncelleyin.
-
 2. Repo'yu klonlayın:
    ```
    git clone https://github.com/batuhansimsar/Bootcamp.git
    ```
+   
+1. Öncelikle gerekli ayarları yapın. WebAPI klasöründe bulunan Program.cs dosyasındaki SQL Server bağlantı bilgilerini kendi bilgisayarınıza göre düzenleyin. Ayrıca appsettings.json dosyasındaki ayarları da buna uygun şekilde güncelleyin.
 
 3. Proje dizinine gidin:
    ```
