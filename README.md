@@ -71,7 +71,7 @@ Proje, temiz mimari prensiplerini takip eden katmanlı bir yapıya sahiptir:
 
 ### Kurulum
 
-1. İlk önce gerekli ayaları yapın, program.cs dosyasındaki sqlserver bağlantısındaki bilgileri kendi bilgisayarınıza göre ayarlayın ve appsetings dosyasındaki ayarları da, ikisi de WebAPI klasöründe bulunuyor
+1. Öncelikle gerekli ayarları yapın. WebAPI klasöründe bulunan Program.cs dosyasındaki SQL Server bağlantı bilgilerini kendi bilgisayarınıza göre düzenleyin. Ayrıca appsettings.json dosyasındaki ayarları da buna uygun şekilde güncelleyin.
 
 2. Repo'yu klonlayın:
    ```
