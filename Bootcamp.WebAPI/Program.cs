@@ -8,22 +8,47 @@ using Bootcamp.Core.UnitOfWork;
 using Bootcamp.Entities;
 using Bootcamp.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "Bootcamp")
+    .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/bootcamp-.log",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+        retainedFileCountLimit: 30)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure DbContext
+// Configure DbContext - use connection string from appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BootcampDbContext>(options =>
 {
-    // SQL Server bağlantı ayarları
-    options.UseSqlServer("Data Source=DESKTOP-HQ6THOL\\SQLEXPRESS;Initial Catalog=BootcampDb;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;");
-    options.EnableSensitiveDataLogging(); // Geliştirme aşamasında hassas veri loglaması
+    options.UseSqlServer(connectionString);
+    
+    // Only enable sensitive data logging in development
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+    }
 });
 
 // Configure AutoMapper
@@ -54,7 +79,7 @@ builder.Services.AddScoped<IApplicationService, ApplicationManager>();
 builder.Services.AddScoped<IBlacklistService, BlacklistManager>();
 builder.Services.AddScoped<IAuthService, AuthManager>();
 
-// Configure JWT
+// Configure JWT - use settings from appsettings.json
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -74,7 +99,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Configure JWT Helper
 builder.Services.AddScoped<JwtHelper>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429;
+    
+    // General rate limit: 100 requests per minute per IP
+    options.AddPolicy("general", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+    
+    // Login rate limit: 5 requests per minute per IP (brute force protection)
+    options.AddPolicy("login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+});
+
+// Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -112,7 +167,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<BootcampDbContext>();
-    // Veritabanını oluştur
     dbContext.Database.EnsureCreated();
 }
 
@@ -123,28 +177,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Request logging middleware
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+});
+
 // Global exception handling middleware
 app.UseGlobalExceptionHandler();
 
 app.UseHttpsRedirection();
+
+// Rate limiting middleware
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Add token options to configuration
-builder.Configuration.GetSection("TokenOptions").Bind(new TokenOptions
-{
-    Audience = "bootcamp-audience",
-    Issuer = "bootcamp-issuer",
-    AccessTokenExpiration = 60,
-    SecurityKey = "this-is-a-very-secure-key-for-jwt-authentication-in-our-bootcamp-application"
-});
+Log.Information("Bootcamp API starting...");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
