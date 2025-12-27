@@ -21,7 +21,7 @@ namespace Bootcamp.Core.Security
                 Audience = "bootcamp-audience",
                 Issuer = "bootcamp-issuer",
                 AccessTokenExpiration = 60,
-                SecurityKey = "this-is-a-very-secure-key-for-jwt-authentication-in-our-bootcamp-application"
+                SecurityKey = "b3Y9ZQfJ7m2R8kP4WcE1T0L5xHnVSaA6DqUoYJrKXlFMBG"
             };
         }
 
