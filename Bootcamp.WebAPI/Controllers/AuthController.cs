@@ -1,6 +1,7 @@
 using Bootcamp.Business.DTOs.Requests;
 using Bootcamp.Business.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.Tasks;
 
 namespace Bootcamp.WebAPI.Controllers
@@ -17,6 +18,7 @@ namespace Bootcamp.WebAPI.Controllers
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
             var loginResponse = await _authService.LoginAsync(loginRequestDto);
