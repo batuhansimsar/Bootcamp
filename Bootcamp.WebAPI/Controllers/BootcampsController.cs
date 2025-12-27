@@ -18,8 +18,16 @@ namespace Bootcamp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PagedRequestDto? pagedRequest)
         {
+            // If pagination parameters provided, return paginated result
+            if (pagedRequest != null && (pagedRequest.PageNumber > 0 || pagedRequest.PageSize > 0))
+            {
+                var pagedBootcamps = await _bootcampService.GetAllPagedAsync(pagedRequest);
+                return Ok(pagedBootcamps);
+            }
+            
+            // Otherwise return all (backward compatibility)
             var bootcamps = await _bootcampService.GetAllAsync();
             return Ok(bootcamps);
         }

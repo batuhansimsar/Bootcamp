@@ -55,6 +55,25 @@ namespace Bootcamp.Business.Services
             return _mapper.Map<IEnumerable<BootcampResponseDto>>(bootcamps);
         }
 
+        public async Task<PagedResponseDto<BootcampResponseDto>> GetAllPagedAsync(PagedRequestDto request)
+        {
+            var allBootcamps = await _unitOfWork.Bootcamps.GetAllAsync();
+            var totalCount = allBootcamps.Count();
+            
+            var pagedBootcamps = allBootcamps
+                .Skip(request.Skip)
+                .Take(request.PageSize)
+                .ToList();
+            
+            var mappedBootcamps = _mapper.Map<List<BootcampResponseDto>>(pagedBootcamps);
+            
+            return new PagedResponseDto<BootcampResponseDto>(
+                mappedBootcamps,
+                totalCount,
+                request.PageNumber,
+                request.PageSize);
+        }
+
         public async Task<BootcampResponseDto> GetByIdAsync(int id)
         {
             var bootcamp = await _unitOfWork.Bootcamps.GetByIdAsync(id);

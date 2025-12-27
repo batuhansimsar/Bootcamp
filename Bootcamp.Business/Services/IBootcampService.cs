@@ -11,6 +11,7 @@ namespace Bootcamp.Business.Services
         Task<BootcampResponseDto> CreateAsync(BootcampRequestDto bootcampRequestDto);
         Task<BootcampResponseDto> GetByIdAsync(int id);
         Task<IEnumerable<BootcampResponseDto>> GetAllAsync();
+        Task<PagedResponseDto<BootcampResponseDto>> GetAllPagedAsync(PagedRequestDto request);
         Task<BootcampResponseDto> UpdateAsync(int id, BootcampRequestDto bootcampRequestDto);
         Task DeleteAsync(int id);
         Task<BootcampResponseDto> UpdateStateAsync(int id, BootcampState newState);
