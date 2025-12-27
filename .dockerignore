@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/.git
+**/.vs
+**/.vscode
+**/logs/
+*.user
+*.suo
+*.cache
+*.db
+.DS_Store
+Thumbs.db
