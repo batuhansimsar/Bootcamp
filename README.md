@@ -1,192 +1,181 @@
-# 🚀 Bootcamp Yönetim Sistemi
+# 🚀 Bootcamp Management System
 
-Yazılım bootcamp'lerinin yönetimini kolaylaştırmak için tasarlanmış kapsamlı bir .NET 8 Web API uygulamasıdır. Eğitmenler, başvuru sahipleri, çalışanlar, bootcamp'ler ve başvurular arasındaki ilişkileri yönetir.
+A comprehensive full-stack application for managing software bootcamp programs, designed to streamline the process for applicants, instructors, and employees.
 
-## 📋 Özellikler
+## 🌟 Features
 
-### Kullanıcı Yönetimi
-- Başvuru sahipleri (Applicant), eğitmenler (Instructor) ve çalışanlar (Employee) için ayrı roller
-- JWT tabanlı kimlik doğrulama ve yetkilendirme
-- Güvenli şifre hashleme (HMACSHA512)
-- Rate limiting ile brute force koruması
+### Backend (.NET 8 Web API)
+- **JWT Authentication & Authorization** - Secure token-based authentication
+- **Role-Based Access Control** - Separate roles for Applicants, Instructors, and Employees
+- **Bootcamp Management** - Full CRUD operations with state management (Preparing, Open, Started, Completed)
+- **Application System** - Track bootcamp applications with status management (Pending, Accepted, Rejected)
+- **Blacklist System** - Prevent problematic applicants from applying
+- **Rate Limiting** - Built-in brute force protection
+- **Global Exception Handling** - Secure error management
+- **Logging** - Comprehensive logging with Serilog
 
-### Bootcamp Yönetimi
-- Bootcamp CRUD işlemleri
-- Eğitmenlerle bootcamp ilişkilendirme
-- Bootcamp durumları: `Preparing`, `Open`, `Started`, `Completed`
+### Frontend (React + TypeScript)
+- **Modern UI/UX** - Beautiful glassmorphism design with dark mode
+- **Responsive Design** - Works seamlessly on all devices
+- **Role-Based Registration** - Separate registration flows for different user types
+- **Real-time Dashboard** - View available bootcamps with live status updates
+- **Smooth Animations** - Engaging micro-interactions and transitions
+- **Type Safety** - Full TypeScript support for better development experience
 
-### Başvuru İşlemleri
-- Bootcamp başvuruları
-- Başvuru durumları: `Pending`, `Accepted`, `Rejected`
-- Kara liste kontrolü
-
-### Kara Liste Yönetimi
-- Problemli başvuru sahiplerini engelleme
-- Otomatik başvuru reddi
-
-## 🏗️ Proje Yapısı
+## 🏗️ Project Structure
 
 ```
 Bootcamp/
-├── Bootcamp.Entities/          # Domain modelleri
-│   ├── User.cs                 # Base kullanıcı sınıfı
-│   ├── Applicant.cs            # Başvuru sahibi
-│   ├── Instructor.cs           # Eğitmen
-│   ├── Employee.cs             # Çalışan
-│   ├── BootcampEntity.cs       # Bootcamp modeli
-│   ├── Application.cs          # Başvuru modeli
-│   └── Blacklist.cs            # Kara liste
+├── Backend (.NET 8)
+│   ├── Bootcamp.Entities/       # Domain models
+│   ├── Bootcamp.Core/           # Core components (Security, Middleware, UnitOfWork)
+│   ├── Bootcamp.Repositories/   # Data access layer with EF Core
+│   ├── Bootcamp.Business/       # Business logic & services
+│   └── Bootcamp.WebAPI/         # REST API endpoints
 │
-├── Bootcamp.Core/              # Ortak bileşenler
-│   ├── Repositories/           # Generic repository arayüzleri
-│   ├── Security/               # JWT & Hashing
-│   ├── Middleware/             # Global exception handler
-│   ├── Exceptions/             # Custom exception sınıfları
-│   └── UnitOfWork/             # Unit of Work pattern
-│
-├── Bootcamp.Repositories/      # Veritabanı katmanı
-│   ├── BootcampDbContext.cs    # EF Core DbContext
-│   └── *Repository.cs          # Repository implementasyonları
-│
-├── Bootcamp.Business/          # İş mantığı
-│   ├── DTOs/                   # Request/Response modelleri
-│   ├── Services/               # Servis implementasyonları
-│   ├── Rules/                  # İş kuralları
-│   └── Profiles/               # AutoMapper profilleri
-│
-└── Bootcamp.WebAPI/            # API katmanı
-    ├── Controllers/            # REST endpoints
-    └── Program.cs              # Uygulama konfigürasyonu
+└── Frontend (React + TypeScript)
+    ├── src/
+    │   ├── components/          # React components (Login, Register, Dashboard)
+    │   ├── api.ts               # API service layer
+    │   ├── AuthContext.tsx      # Authentication state management
+    │   └── index.css            # Design system & utilities
+    └── index.html
 ```
 
-## 🛠️ Teknolojiler
+## 🛠️ Technologies
 
-| Teknoloji | Versiyon | Açıklama |
-|-----------|----------|----------|
-| .NET | 8.0 | Framework |
-| Entity Framework Core | 8.0 | ORM |
-| SQL Server | - | Veritabanı |
-| JWT Bearer | - | Authentication |
-| AutoMapper | - | Object mapping |
-| Serilog | - | Logging |
-| Swagger | - | API dokümantasyonu |
+### Backend Stack
+| Technology | Description |
+|-----------|-------------|
+| .NET 8 | Modern framework with minimal APIs |
+| Entity Framework Core 8 | ORM for database operations |
+| SQL Server | Relational database |
+| JWT Bearer | Token-based authentication |
+| AutoMapper | Object-to-object mapping |
+| Serilog | Structured logging |
+| Swagger/OpenAPI | API documentation |
 
-## 🚀 Kurulum
+### Frontend Stack
+| Technology | Description |
+|-----------|-------------|
+| React 18 | UI library |
+| TypeScript | Type-safe JavaScript |
+| Vite | Fast build tool & dev server |
+| React Router | Client-side routing |
+| Axios | HTTP client |
+| CSS3 | Modern styling with variables |
 
-### Gereksinimler
+## 🚀 Getting Started
+
+### Prerequisites
 - .NET 8 SDK
-- SQL Server (LocalDB veya Express)
-- IDE (Visual Studio, VS Code, Rider)
+- Node.js 18+ and npm
+- SQL Server (LocalDB or Express)
 
-### Adımlar
+### Backend Setup
 
 ```bash
-# 1. Repo'yu klonlayın
-git clone https://github.com/batuhansimsar/Bootcamp.git
+# Navigate to project root
 cd Bootcamp
 
-# 2. Bağımlılıkları yükleyin
+# Restore dependencies
 dotnet restore
 
-# 3. appsettings.json'daki connection string'i düzenleyin
-# Bootcamp.WebAPI/appsettings.json dosyasını açın ve kendi SQL Server bilgilerinizi girin
+# Update connection string in Bootcamp.WebAPI/appsettings.json
+# Example:
+# "ConnectionStrings": {
+#   "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=BootcampDb;Trusted_Connection=true;"
+# }
 
-# 4. Veritabanını oluşturun
+# Create database
 dotnet ef database update --project Bootcamp.Repositories --startup-project Bootcamp.WebAPI
 
-# 5. Uygulamayı çalıştırın
+# Run the API
 cd Bootcamp.WebAPI
 dotnet run
 ```
 
-API: `http://localhost:5158/swagger`
+API will be available at: `http://localhost:5158/swagger`
 
-## 🔍 API Endpoints
+### Frontend Setup
 
-### Auth
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| POST | `/api/Auth/login` | Giriş yap |
-| POST | `/api/Auth/register/applicant` | Başvuru sahibi kayıt |
-| POST | `/api/Auth/register/instructor` | Eğitmen kayıt |
-| POST | `/api/Auth/register/employee` | Çalışan kayıt |
+```bash
+# Navigate to frontend directory
+cd Bootcamp/frontend
+
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+Frontend will be available at: `http://localhost:5173`
+
+## 📝 API Endpoints
+
+### Authentication
+- `POST /api/Auth/login` - User login
+- `POST /api/Auth/register/applicant` - Register as applicant
+- `POST /api/Auth/register/instructor` - Register as instructor
+- `POST /api/Auth/register/employee` - Register as employee
 
 ### Bootcamps
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/Bootcamps` | Tüm bootcamp'leri listele |
-| GET | `/api/Bootcamps/{id}` | Bootcamp detayı |
-| POST | `/api/Bootcamps` | Yeni bootcamp oluştur |
-| PUT | `/api/Bootcamps/{id}` | Bootcamp güncelle |
-| DELETE | `/api/Bootcamps/{id}` | Bootcamp sil |
+- `GET /api/Bootcamps` - List all bootcamps
+- `GET /api/Bootcamps/{id}` - Get bootcamp details
+- `POST /api/Bootcamps` - Create new bootcamp
+- `PUT /api/Bootcamps/{id}` - Update bootcamp
+- `DELETE /api/Bootcamps/{id}` - Delete bootcamp
 
 ### Applications
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/Applications` | Başvuruları listele |
-| POST | `/api/Applications` | Yeni başvuru |
-| PUT | `/api/Applications/{id}` | Başvuru güncelle |
-| DELETE | `/api/Applications/{id}` | Başvuru sil |
+- `GET /api/Applications` - List applications
+- `POST /api/Applications` - Submit application
+- `PUT /api/Applications/{id}` - Update application
+- `DELETE /api/Applications/{id}` - Delete application
 
-### Blacklists
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/Blacklists` | Kara listeyi görüntüle |
-| POST | `/api/Blacklists` | Kara listeye ekle |
-| DELETE | `/api/Blacklists/{id}` | Kara listeden çıkar |
+### Blacklist
+- `GET /api/Blacklists` - View blacklist
+- `POST /api/Blacklists` - Add to blacklist
+- `DELETE /api/Blacklists/{id}` - Remove from blacklist
 
-## 📝 Örnek İstekler
+## 🎨 Design Features
 
-### Kayıt Olma
-```json
-POST /api/Auth/register/applicant
-{
-  "firstName": "Ahmet",
-  "lastName": "Yılmaz",
-  "dateOfBirth": "1995-01-15",
-  "nationalityIdentity": "12345678901",
-  "email": "ahmet@example.com",
-  "password": "SecurePassword123",
-  "about": "Yazılım geliştirici olmak istiyorum"
-}
-```
+- **Glassmorphism UI** - Modern frosted glass effect
+- **Dark Mode** - Eye-friendly dark color scheme
+- **Gradient Accents** - Vibrant purple and blue gradients
+- **Micro-animations** - Smooth hover effects and transitions
+- **Responsive Grid** - Adaptive layouts for all screen sizes
+- **Custom Scrollbars** - Styled to match the dark theme
 
-### Giriş Yapma
-```json
-POST /api/Auth/login
-{
-  "email": "ahmet@example.com",
-  "password": "SecurePassword123"
-}
-```
+## 🔒 Security Features
 
-### Bootcamp Oluşturma
-```json
-POST /api/Bootcamps
-{
-  "name": ".NET Core Bootcamp",
-  "instructorId": 1,
-  "startDate": "2025-03-01",
-  "endDate": "2025-05-30"
-}
-```
+- **JWT Authentication** - Secure token-based auth
+- **Password Hashing** - HMACSHA512 encryption
+- **Rate Limiting** - 5 requests/minute for login, 100 requests/minute general
+- **Global Exception Handler** - Prevents sensitive data leakage
+- **Input Validation** - Comprehensive data validation
 
-## 💡 İş Kuralları
+## 💡 Business Rules
 
-- ❌ Kara listedeki kullanıcılar başvuru yapamaz
-- ❌ Aynı bootcamp'e birden fazla başvuru yapılamaz
-- ❌ Başlangıç tarihi bitiş tarihinden sonra olamaz
-- ❌ Sadece "Open" durumundaki bootcamp'lere başvuru yapılabilir
+- ❌ Blacklisted users cannot apply to bootcamps
+- ❌ Users cannot apply to the same bootcamp multiple times
+- ❌ Start date must be before end date
+- ✅ Only "Open" status bootcamps accept applications
 
-## 🔒 Güvenlik
+## 📸 Screenshots
 
-- **JWT Authentication**: Token tabanlı kimlik doğrulama
-- **Password Hashing**: HMACSHA512 ile şifreleme
-- **Rate Limiting**: Login endpoint'i için dakikada 5 istek limiti
-- **Global Exception Handling**: Hassas hata bilgilerini gizleme
+*(Screenshots would be placed here showing login, dashboard, and bootcamp cards)*
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
 
 ---
 
 <p align="center">
-  ⭐️ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın! ⭐️
+  ⭐️ If you like this project, please give it a star! ⭐️
 </p>
