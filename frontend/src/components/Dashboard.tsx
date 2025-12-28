@@ -10,7 +10,7 @@ interface Bootcamp {
     instructorId: number;
     startDate: string;
     endDate: string;
-    bootcampState: string;
+    bootcampState: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -27,8 +27,10 @@ const Dashboard: React.FC = () => {
     const fetchBootcamps = async () => {
         try {
             const response = await bootcampAPI.getAll();
-            setBootcamps(response.data);
+            // Handle paginated response (response.data.items) or direct array
+            setBootcamps(response.data.items || response.data);
         } catch (err: any) {
+            console.error(err);
             setError('Failed to load bootcamps');
         } finally {
             setLoading(false);
@@ -40,14 +42,24 @@ const Dashboard: React.FC = () => {
         navigate('/login');
     };
 
-    const getStatusBadge = (status: string) => {
-        const badges: { [key: string]: string } = {
-            Preparing: 'badge-secondary',
-            Open: 'badge-success',
-            Started: 'badge-primary',
-            Completed: 'badge-warning',
-        };
-        return badges[status] || 'badge-secondary';
+    const getStatusLabel = (state: number) => {
+        switch (state) {
+            case 0: return 'Preparing';
+            case 1: return 'Open';
+            case 2: return 'Started';
+            case 3: return 'Completed';
+            default: return 'Unknown';
+        }
+    };
+
+    const getStatusBadge = (state: number) => {
+        switch (state) {
+            case 0: return 'badge-secondary'; // Preparing
+            case 1: return 'badge-success';   // Open
+            case 2: return 'badge-primary';   // Started
+            case 3: return 'badge-warning';   // Completed
+            default: return 'badge-secondary';
+        }
     };
 
     return (
@@ -94,7 +106,7 @@ const Dashboard: React.FC = () => {
                                 <div className="bootcamp-header">
                                     <h3>{bootcamp.name}</h3>
                                     <span className={`badge ${getStatusBadge(bootcamp.bootcampState)}`}>
-                                        {bootcamp.bootcampState}
+                                        {getStatusLabel(bootcamp.bootcampState)}
                                     </span>
                                 </div>
                                 <div className="bootcamp-info">
