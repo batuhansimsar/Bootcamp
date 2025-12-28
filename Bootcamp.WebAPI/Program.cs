@@ -38,6 +38,18 @@ builder.Host.UseSerilog();
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // Configure DbContext - use connection string from appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BootcampDbContext>(options =>
@@ -186,7 +198,9 @@ app.UseSerilogRequestLogging(options =>
 // Global exception handling middleware
 app.UseGlobalExceptionHandler();
 
-app.UseHttpsRedirection();
+
+// CORS middleware - must be before Authentication/Authorization
+app.UseCors("AllowFrontend");
 
 // Rate limiting middleware
 app.UseRateLimiter();
