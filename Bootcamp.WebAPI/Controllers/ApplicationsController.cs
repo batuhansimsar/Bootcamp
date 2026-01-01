@@ -50,5 +50,26 @@ namespace Bootcamp.WebAPI.Controllers
             await _applicationService.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpGet("my-applications/{applicantId}")]
+        public async Task<IActionResult> GetMyApplications(int applicantId)
+        {
+            var applications = await _applicationService.GetByApplicantIdAsync(applicantId);
+            return Ok(applications);
+        }
+
+        [HttpGet("bootcamp/{bootcampId}")]
+        public async Task<IActionResult> GetByBootcampId(int bootcampId)
+        {
+            var applications = await _applicationService.GetByBootcampIdAsync(bootcampId);
+            return Ok(applications);
+        }
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckIfApplied([FromQuery] int applicantId, [FromQuery] int bootcampId)
+        {
+            var hasApplied = await _applicationService.HasAppliedAsync(applicantId, bootcampId);
+            return Ok(new { hasApplied });
+        }
     }
 }

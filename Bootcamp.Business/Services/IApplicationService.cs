@@ -12,5 +12,10 @@ namespace Bootcamp.Business.Services
         Task<IEnumerable<ApplicationResponseDto>> GetAllAsync();
         Task<ApplicationResponseDto> UpdateStatusAsync(ApplicationStatusUpdateRequestDto updateRequestDto);
         Task DeleteAsync(int id);
+        
+        // New methods
+        Task<IEnumerable<ApplicationResponseDto>> GetByApplicantIdAsync(int applicantId);
+        Task<IEnumerable<ApplicationResponseDto>> GetByBootcampIdAsync(int bootcampId);
+        Task<bool> HasAppliedAsync(int applicantId, int bootcampId);
     }
 } 

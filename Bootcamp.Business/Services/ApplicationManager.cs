@@ -6,6 +6,7 @@ using Bootcamp.Core.UnitOfWork;
 using Bootcamp.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bootcamp.Business.Services
@@ -81,6 +82,26 @@ namespace Bootcamp.Business.Services
             await _unitOfWork.CompleteAsync();
             
             return _mapper.Map<ApplicationResponseDto>(application);
+        }
+
+        public async Task<IEnumerable<ApplicationResponseDto>> GetByApplicantIdAsync(int applicantId)
+        {
+            var applications = await _unitOfWork.Applications.GetAllAsync();
+            var applicantApplications = applications.Where(a => a.ApplicantId == applicantId);
+            return _mapper.Map<IEnumerable<ApplicationResponseDto>>(applicantApplications);
+        }
+
+        public async Task<IEnumerable<ApplicationResponseDto>> GetByBootcampIdAsync(int bootcampId)
+        {
+            var applications = await _unitOfWork.Applications.GetAllAsync();
+            var bootcampApplications = applications.Where(a => a.BootcampId == bootcampId);
+            return _mapper.Map<IEnumerable<ApplicationResponseDto>>(bootcampApplications);
+        }
+
+        public async Task<bool> HasAppliedAsync(int applicantId, int bootcampId)
+        {
+            var applications = await _unitOfWork.Applications.GetAllAsync();
+            return applications.Any(a => a.ApplicantId == applicantId && a.BootcampId == bootcampId);
         }
     }
 } 
