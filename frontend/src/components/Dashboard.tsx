@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { bootcampAPI } from '../api';
+import { bootcampAPI, applicationAPI } from '../api';
+import Toast from './Toast';
 import './Dashboard.css';
 
 interface Bootcamp {
@@ -13,21 +14,32 @@ interface Bootcamp {
     bootcampState: number;
 }
 
+interface ToastState {
+    show: boolean;
+    message: string;
+    type: 'success' | 'error' | 'info';
+}
+
 const Dashboard: React.FC = () => {
     const [bootcamps, setBootcamps] = useState<Bootcamp[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [appliedBootcamps, setAppliedBootcamps] = useState<Set<number>>(new Set());
+    const [applyingTo, setApplyingTo] = useState<number | null>(null);
+    const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'info' });
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchBootcamps();
-    }, []);
+        if (user?.role === 'applicant') {
+            checkAppliedBootcamps();
+        }
+    }, [user]);
 
     const fetchBootcamps = async () => {
         try {
             const response = await bootcampAPI.getAll();
-            // Handle paginated response (response.data.items) or direct array
             setBootcamps(response.data.items || response.data);
         } catch (err: any) {
             console.error(err);
@@ -35,6 +47,62 @@ const Dashboard: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const checkAppliedBootcamps = async () => {
+        if (!user?.id) return;
+
+        try {
+            const applied = new Set<number>();
+            for (const bootcamp of bootcamps) {
+                const response = await applicationAPI.checkApplied(user.id, bootcamp.id);
+                if (response.data.hasApplied) {
+                    applied.add(bootcamp.id);
+                }
+            }
+            setAppliedBootcamps(applied);
+        } catch (err) {
+            console.error('Failed to check applied bootcamps:', err);
+        }
+    };
+
+    const handleApply = async (bootcampId: number) => {
+        if (!user?.id) {
+            showToast('Please login to apply', 'error');
+            return;
+        }
+
+        setApplyingTo(bootcampId);
+        try {
+            await applicationAPI.create({
+                applicantId: user.id,
+                bootcampId: bootcampId
+            });
+
+            setAppliedBootcamps(prev => new Set(prev).add(bootcampId));
+            showToast('Application submitted successfully! 🎉', 'success');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || 'Failed to submit application';
+            showToast(errorMessage, 'error');
+        } finally {
+            setApplyingTo(null);
+        }
+    };
+
+    const handleDelete = async (bootcampId: number) => {
+        if (!confirm('Are you sure you want to delete this bootcamp?')) return;
+
+        try {
+            await bootcampAPI.delete(bootcampId);
+            setBootcamps(prev => prev.filter(b => b.id !== bootcampId));
+            showToast('Bootcamp deleted successfully', 'success');
+        } catch (err: any) {
+            showToast('Failed to delete bootcamp', 'error');
+        }
+    };
+
+    const showToast = (message: string, type: 'success' | 'error' | 'info') => {
+        setToast({ show: true, message, type });
     };
 
     const handleLogout = () => {
@@ -54,21 +122,63 @@ const Dashboard: React.FC = () => {
 
     const getStatusBadge = (state: number) => {
         switch (state) {
-            case 0: return 'badge-secondary'; // Preparing
-            case 1: return 'badge-success';   // Open
-            case 2: return 'badge-primary';   // Started
-            case 3: return 'badge-warning';   // Completed
+            case 0: return 'badge-secondary';
+            case 1: return 'badge-success';
+            case 2: return 'badge-primary';
+            case 3: return 'badge-warning';
             default: return 'badge-secondary';
         }
     };
 
+    const canApply = (bootcamp: Bootcamp) => {
+        return user?.role === 'applicant' &&
+            bootcamp.bootcampState === 1 &&
+            !appliedBootcamps.has(bootcamp.id);
+    };
+
+    const hasApplied = (bootcampId: number) => {
+        return appliedBootcamps.has(bootcampId);
+    };
+
     return (
         <div className="dashboard">
+            {toast.show && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast({ ...toast, show: false })}
+                />
+            )}
+
             <nav className="dashboard-nav glass">
                 <div className="nav-brand">
                     <h2>🚀 Bootcamp</h2>
                 </div>
                 <div className="nav-menu">
+                    {user?.role === 'applicant' && (
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => navigate('/my-applications')}
+                        >
+                            My Applications
+                        </button>
+                    )}
+                    {(user?.role === 'employee' || user?.role === 'instructor') && (
+                        <>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => navigate('/create-bootcamp')}
+                            >
+                                + Create Bootcamp
+                            </button>
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => navigate('/manage-applications')}
+                            >
+                                Manage Applications
+                            </button>
+                        </>
+                    )}
                     <span className="user-info">
                         {user?.role === 'applicant' && '👨‍🎓'}
                         {user?.role === 'instructor' && '👨‍🏫'}
@@ -127,9 +237,45 @@ const Dashboard: React.FC = () => {
                                         <span className="info-value">{bootcamp.instructorId}</span>
                                     </div>
                                 </div>
-                                {user?.role === 'applicant' && bootcamp.bootcampState === 'Open' && (
-                                    <button className="btn btn-primary btn-block">Apply Now</button>
-                                )}
+
+                                <div className="bootcamp-actions">
+                                    {canApply(bootcamp) && (
+                                        <button
+                                            className="btn btn-primary btn-block"
+                                            onClick={() => handleApply(bootcamp.id)}
+                                            disabled={applyingTo === bootcamp.id}
+                                        >
+                                            {applyingTo === bootcamp.id ? (
+                                                <div className="spinner-small"></div>
+                                            ) : (
+                                                'Apply Now'
+                                            )}
+                                        </button>
+                                    )}
+
+                                    {hasApplied(bootcamp.id) && user?.role === 'applicant' && (
+                                        <button className="btn btn-success btn-block" disabled>
+                                            ✓ Applied
+                                        </button>
+                                    )}
+
+                                    {(user?.role === 'employee' || user?.role === 'instructor') && (
+                                        <div className="admin-actions">
+                                            <button
+                                                className="btn btn-outline"
+                                                onClick={() => navigate(`/edit-bootcamp/${bootcamp.id}`)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="btn btn-danger"
+                                                onClick={() => handleDelete(bootcamp.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>

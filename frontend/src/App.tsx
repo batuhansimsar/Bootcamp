@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import MyApplications from './components/MyApplications';
 import './index.css';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -23,6 +24,14 @@ const App: React.FC = () => {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-applications"
+            element={
+              <PrivateRoute>
+                <MyApplications />
               </PrivateRoute>
             }
           />

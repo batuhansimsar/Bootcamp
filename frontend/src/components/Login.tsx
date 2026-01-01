@@ -19,8 +19,8 @@ const Login: React.FC = () => {
 
         try {
             const response = await authAPI.login(email, password);
-            const { token, email: userEmail, role } = response.data;
-            login(userEmail, role, token);
+            const { token, email: userEmail, role, id } = response.data;
+            login(id, userEmail, role, token);
             navigate('/dashboard');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');

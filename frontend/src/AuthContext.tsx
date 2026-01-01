@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
+    id: number;
     email: string;
     role: string;
     token: string;
@@ -8,7 +9,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
-    login: (email: string, role: string, token: string) => void;
+    login: (id: number, email: string, role: string, token: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -22,23 +23,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const token = localStorage.getItem('token');
         const email = localStorage.getItem('email');
         const role = localStorage.getItem('role');
+        const id = localStorage.getItem('userId');
 
-        if (token && email && role) {
-            setUser({ email, role, token });
+        if (token && email && role && id) {
+            setUser({ id: parseInt(id), email, role, token });
         }
     }, []);
 
-    const login = (email: string, role: string, token: string) => {
+    const login = (id: number, email: string, role: string, token: string) => {
         localStorage.setItem('token', token);
         localStorage.setItem('email', email);
         localStorage.setItem('role', role);
-        setUser({ email, role, token });
+        localStorage.setItem('userId', id.toString());
+        setUser({ id, email, role, token });
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('email');
         localStorage.removeItem('role');
+        localStorage.removeItem('userId');
         setUser(null);
     };
 
