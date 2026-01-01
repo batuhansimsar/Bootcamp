@@ -50,11 +50,15 @@ const Register: React.FC = () => {
             } else if (role === 'instructor') {
                 await authAPI.registerInstructor({
                     ...baseData,
+                    dateOfBirth: formData.dateOfBirth,
+                    nationalityIdentity: formData.nationalityIdentity,
                     companyName: formData.companyName,
                 });
             } else {
                 await authAPI.registerEmployee({
                     ...baseData,
+                    dateOfBirth: formData.dateOfBirth,
+                    nationalityIdentity: formData.nationalityIdentity,
                     position: formData.position,
                 });
             }
@@ -149,41 +153,40 @@ const Register: React.FC = () => {
                         />
                     </div>
 
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">Date of Birth</label>
+                            <input
+                                type="date"
+                                name="dateOfBirth"
+                                value={formData.dateOfBirth}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">National ID</label>
+                            <input
+                                type="text"
+                                name="nationalityIdentity"
+                                value={formData.nationalityIdentity}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+
                     {role === 'applicant' && (
-                        <>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label className="form-label">Date of Birth</label>
-                                    <input
-                                        type="date"
-                                        name="dateOfBirth"
-                                        value={formData.dateOfBirth}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">National ID</label>
-                                    <input
-                                        type="text"
-                                        name="nationalityIdentity"
-                                        value={formData.nationalityIdentity}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">About</label>
-                                <textarea
-                                    name="about"
-                                    value={formData.about}
-                                    onChange={handleChange}
-                                    rows={3}
-                                    required
-                                />
-                            </div>
-                        </>
+                        <div className="form-group">
+                            <label className="form-label">About</label>
+                            <textarea
+                                name="about"
+                                value={formData.about}
+                                onChange={handleChange}
+                                rows={3}
+                                required
+                            />
+                        </div>
                     )}
 
                     {role === 'instructor' && (

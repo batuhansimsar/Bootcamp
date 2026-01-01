@@ -36,6 +36,8 @@ export const authAPI = {
     registerInstructor: (data: {
         firstName: string;
         lastName: string;
+        dateOfBirth: string;
+        nationalityIdentity: string;
         email: string;
         password: string;
         companyName: string;
@@ -44,6 +46,8 @@ export const authAPI = {
     registerEmployee: (data: {
         firstName: string;
         lastName: string;
+        dateOfBirth: string;
+        nationalityIdentity: string;
         email: string;
         password: string;
         position: string;
@@ -74,6 +78,14 @@ export const applicationAPI = {
     }) => api.post('/Applications', data),
     update: (id: number, data: any) => api.put(`/Applications/${id}`, data),
     delete: (id: number) => api.delete(`/Applications/${id}`),
+    getMyApplications: (applicantId: number) => api.get(`/Applications/my-applications/${applicantId}`),
+    getByBootcamp: (bootcampId: number) => api.get(`/Applications/bootcamp/${bootcampId}`),
+    checkApplied: (applicantId: number, bootcampId: number) =>
+        api.get(`/Applications/check?applicantId=${applicantId}&bootcampId=${bootcampId}`),
+    updateStatus: (data: {
+        applicationId: number;
+        newState: number;
+    }) => api.patch('/Applications/status', data),
 };
 
 // Blacklist API
