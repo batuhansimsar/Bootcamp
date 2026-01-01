@@ -1,0 +1,90 @@
+.my-applications {
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.applications-content {
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.applications-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.applications-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.applications-header p {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.applications-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.application-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.application-header>div {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex: 1;
+}
+
+.application-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.bootcamp-status {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+}
+
+.application-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.badge-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .application-header {
+        flex-direction: column;
+    }
+
+    .applications-header h1 {
+        font-size: 2rem;
+    }
+}
