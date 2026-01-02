@@ -4,9 +4,6 @@ const API_BASE_URL = 'http://localhost:5158/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
 
 // Add auth token to requests
@@ -23,15 +20,7 @@ export const authAPI = {
     login: (email: string, password: string) =>
         api.post('/Auth/login', { email, password }),
 
-    registerApplicant: (data: {
-        firstName: string;
-        lastName: string;
-        dateOfBirth: string;
-        nationalityIdentity: string;
-        email: string;
-        password: string;
-        about: string;
-    }) => api.post('/Auth/register/applicant', data),
+    registerApplicant: (data: any) => api.post('/Auth/register/applicant', data),
 
     registerInstructor: (data: {
         firstName: string;
