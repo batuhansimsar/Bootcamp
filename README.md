@@ -64,6 +64,7 @@ This project is built using **Clean Architecture** principles to ensure scalabil
 - ✅ Track application status (Pending, Approved, Rejected)
 - ✅ Duplicate application prevention
 - ✅ Blacklist checking
+- ✅ CV/Resume upload for applicants
 
 ### User Interface
 - ✅ Modern glassmorphism design
@@ -271,7 +272,6 @@ The following features are planned for future releases:
 - [ ] **Unit & Integration Tests**: Comprehensive testing suite using xUnit and Moq
 - [ ] **Profile Management**: Allow users to update profiles and change passwords
 - [ ] **Search & Filter**: Advanced search capabilities for bootcamps
-- [ ] **File Upload**: Support for CV/resume uploads
 - [ ] **Real-time Notifications**: WebSocket integration for live updates
 - [ ] **Multi-language Support**: i18n for internationalization
 - [ ] **Export Features**: Export applications and bootcamp data to CSV/PDF
