@@ -18,6 +18,7 @@ const Register: React.FC = () => {
         companyName: '',
         position: '',
     });
+    const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -27,40 +28,57 @@ const Register: React.FC = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setResumeFile(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
         try {
-            const baseData = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                password: formData.password,
-            };
-
             if (role === 'applicant') {
-                await authAPI.registerApplicant({
-                    ...baseData,
-                    dateOfBirth: formData.dateOfBirth,
-                    nationalityIdentity: formData.nationalityIdentity,
-                    about: formData.about,
-                });
-            } else if (role === 'instructor') {
-                await authAPI.registerInstructor({
-                    ...baseData,
-                    dateOfBirth: formData.dateOfBirth,
-                    nationalityIdentity: formData.nationalityIdentity,
-                    companyName: formData.companyName,
-                });
+                const data = new FormData();
+                data.append('firstName', formData.firstName);
+                data.append('lastName', formData.lastName);
+                data.append('email', formData.email);
+                data.append('password', formData.password);
+                data.append('dateOfBirth', formData.dateOfBirth);
+                data.append('nationalityIdentity', formData.nationalityIdentity);
+                data.append('about', formData.about);
+                data.append('userType', 'applicant');
+
+                if (resumeFile) {
+                    data.append('resumeFile', resumeFile);
+                }
+
+                await authAPI.registerApplicant(data);
             } else {
-                await authAPI.registerEmployee({
-                    ...baseData,
-                    dateOfBirth: formData.dateOfBirth,
-                    nationalityIdentity: formData.nationalityIdentity,
-                    position: formData.position,
-                });
+                const baseData = {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    password: formData.password,
+                };
+
+                if (role === 'instructor') {
+                    await authAPI.registerInstructor({
+                        ...baseData,
+                        dateOfBirth: formData.dateOfBirth,
+                        nationalityIdentity: formData.nationalityIdentity,
+                        companyName: formData.companyName,
+                    });
+                } else {
+                    await authAPI.registerEmployee({
+                        ...baseData,
+                        dateOfBirth: formData.dateOfBirth,
+                        nationalityIdentity: formData.nationalityIdentity,
+                        position: formData.position,
+                    });
+                }
             }
 
             setSuccess(true);
@@ -177,16 +195,27 @@ const Register: React.FC = () => {
                     </div>
 
                     {role === 'applicant' && (
-                        <div className="form-group">
-                            <label className="form-label">About</label>
-                            <textarea
-                                name="about"
-                                value={formData.about}
-                                onChange={handleChange}
-                                rows={3}
-                                required
-                            />
-                        </div>
+                        <>
+                            <div className="form-group">
+                                <label className="form-label">About</label>
+                                <textarea
+                                    name="about"
+                                    value={formData.about}
+                                    onChange={handleChange}
+                                    rows={3}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Upload Resume (PDF)</label>
+                                <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={handleFileChange}
+                                    className="file-input" // You might need to style this class
+                                />
+                            </div>
+                        </>
                     )}
 
                     {role === 'instructor' && (
