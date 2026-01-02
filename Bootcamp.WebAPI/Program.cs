@@ -43,7 +43,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -185,8 +185,14 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    // Global exception handling middleware for production
+    app.UseGlobalExceptionHandler();
 }
 
 // Request logging middleware
@@ -195,12 +201,11 @@ app.UseSerilogRequestLogging(options =>
     options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 });
 
-// Global exception handling middleware
-app.UseGlobalExceptionHandler();
-
 
 // CORS middleware - must be before Authentication/Authorization
 app.UseCors("AllowFrontend");
+
+app.UseStaticFiles();
 
 // Rate limiting middleware
 app.UseRateLimiter();

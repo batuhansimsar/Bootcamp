@@ -21,12 +21,15 @@ namespace Bootcamp.WebAPI.Controllers
         [EnableRateLimiting("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
-            var loginResponse = await _authService.LoginAsync(loginRequestDto);
-            return Ok(loginResponse);
+            var result = await _authService.LoginAsync(loginRequestDto);
+            if (result == null)
+                return Unauthorized(new { message = "Invalid email or password" });
+                
+            return Ok(result);
         }
 
         [HttpPost("register/applicant")]
-        public async Task<IActionResult> RegisterApplicant([FromBody] ApplicantRequestDto applicantRequestDto)
+        public async Task<IActionResult> RegisterApplicant([FromForm] ApplicantRequestDto applicantRequestDto)
         {
             var registeredApplicant = await _authService.RegisterApplicantAsync(applicantRequestDto);
             return Ok(registeredApplicant);
