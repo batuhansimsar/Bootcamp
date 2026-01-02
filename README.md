@@ -256,11 +256,12 @@ builder.Services.AddCors(options =>
 ### Manual Testing
 
 1. Register a new user (Applicant, Instructor, or Employee)
-2. Login with credentials
-3. Navigate through the dashboard
-4. Create a bootcamp (as Instructor)
-5. Apply to a bootcamp (as Applicant)
-6. View and manage applications
+2. Upload CV/Resume (for Applicants)
+3. Login with credentials
+4. Navigate through the dashboard
+5. Create a bootcamp (as Instructor)
+6. Apply to a bootcamp (as Applicant)
+7. View and manage applications
 
 ## 🔮 Future Improvements
 
@@ -278,8 +279,12 @@ The following features are planned for future releases:
 
 ## 🐛 Known Issues & Fixes
 
+### CV/Resume Upload Feature (2026-01-02)
+Implemented CV/Resume upload functionality for applicant registration. Fixed a critical issue where the global `Content-Type: application/json` header in the frontend API configuration was preventing `multipart/form-data` processing. The fix involved removing the global header to allow Axios to automatically set the correct `Content-Type` with boundary parameters for file uploads.
+
 ### Registration Bug Fix (2026-01-01)
 Fixed a critical bug where Instructor and Employee registration was failing with 400 Bad Request errors. The issue was caused by missing `dateOfBirth` and `nationalityIdentity` fields required by the backend's `UserRequestDto` base class. These fields are now properly included for all user types.
+
 
 ## 📝 License
 
