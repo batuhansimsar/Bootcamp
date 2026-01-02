@@ -6,6 +6,7 @@ namespace Bootcamp.Entities
     public class Applicant : User
     {
         public string About { get; set; }
+        public string? ResumeUrl {get;set;}
         
         // Navigation properties
         public virtual ICollection<Application> Applications { get; set; }

@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Bootcamp.Core\Bootcamp.Core.csproj" />
     <ProjectReference Include="..\Bootcamp.Entities\Bootcamp.Entities.csproj" />
     <ProjectReference Include="..\Bootcamp.Repositories\Bootcamp.Repositories.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>

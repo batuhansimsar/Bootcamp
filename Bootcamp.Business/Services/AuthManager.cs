@@ -6,6 +6,7 @@ using Bootcamp.Core.UnitOfWork;
 using Bootcamp.Entities;
 using System;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Bootcamp.Business.Services
 {
@@ -30,7 +31,7 @@ namespace Bootcamp.Business.Services
             {
                 // Verify password
                 if (!HashingHelper.VerifyPasswordHash(loginRequestDto.Password, applicant.PasswordHash, applicant.PasswordSalt))
-                    throw new Exception("Invalid email or password");
+                    return null;
                 
                 // Generate JWT token
                 var token = _jwtHelper.CreateToken(applicant);
@@ -88,7 +89,7 @@ namespace Bootcamp.Business.Services
                 };
             }
             
-            throw new Exception("Invalid email or password");
+            return null;
         }
 
         public async Task<ApplicantResponseDto> RegisterApplicantAsync(ApplicantRequestDto applicantRequestDto)
@@ -99,14 +100,30 @@ namespace Bootcamp.Business.Services
                 throw new Exception("Email already in use");
             
             var applicant = _mapper.Map<Applicant>(applicantRequestDto);
-            
+
             // Hash the password
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(applicantRequestDto.Password, out passwordHash, out passwordSalt);
             applicant.PasswordHash = passwordHash;
             applicant.PasswordSalt = passwordSalt;
             applicant.UserType = "Applicant";
-            
+
+            // File Upload Logic
+            if (applicantRequestDto.ResumeFile != null && applicantRequestDto.ResumeFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(applicantRequestDto.ResumeFile.FileName);
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+                
+                var filePath = Path.Combine(uploadPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await applicantRequestDto.ResumeFile.CopyToAsync(stream);
+                }
+                
+                applicant.ResumeUrl = "/uploads/" + fileName;
+            }
+
             await _unitOfWork.Applicants.AddAsync(applicant);
             await _unitOfWork.CompleteAsync();
             
